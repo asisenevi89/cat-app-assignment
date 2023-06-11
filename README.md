@@ -17,7 +17,7 @@ This project is composed with backend and frontend directories which are needed 
 cd cat-node
 cp .env.example .env
 npm install
-npm start
+npm run dev
 ```
 
 ## Setup frontend
