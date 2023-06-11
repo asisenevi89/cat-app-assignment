@@ -3,9 +3,6 @@
 /.pnp
 .pnp.js
 
-# storage
-/storage
-
 # Code editor configs
 /.idea
 /.vscode
