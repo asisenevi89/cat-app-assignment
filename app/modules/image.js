@@ -98,7 +98,7 @@ export const getImage = async imageId => {
  *
  * @param count Integer
  * @param skip Integer
- * @return {Promise<{data: *, totalCount: *}|{error: boolean, message: string, statusCode: number}>}
+ * @return Object
  */
 export const listImages = async (count, skip) => {
   try {
