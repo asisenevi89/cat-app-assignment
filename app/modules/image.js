@@ -1,9 +1,9 @@
-const axios = require('axios');
-const { ObjectID } = require("bson");
-const mergeImg = require('merge-img');
-const fs = require("fs");
-const  config = require("../utils/config");
-const { getErrorResponse, getMongoConnection } = require("../utils/helpers");
+import axios from 'axios';
+import { ObjectID } from  "bson";
+import mergeImg  from 'merge-img';
+import fs from "fs";
+import config from "../utils/config.js";
+import { getErrorResponse, getMongoConnection } from "../utils/helpers.js";
 
 /**
  * Create and Save new image
@@ -11,7 +11,7 @@ const { getErrorResponse, getMongoConnection } = require("../utils/helpers");
  * @param reqBody Object
  * @return Object
  */
-module.exports.saveNewImage = async reqBody => {
+export const saveNewImage = async reqBody => {
   try {
     const { catURL, defaultImageProps, imageResponseType } = config;
     const {
@@ -63,7 +63,7 @@ module.exports.saveNewImage = async reqBody => {
  * @param imageId String
  * @return Object
  */
-module.exports.getImage = async imageId => {
+export const getImage = async imageId => {
   try {
     const { mongo } = config;
     const connection = await getMongoConnection(mongo);
@@ -100,7 +100,7 @@ module.exports.getImage = async imageId => {
  * @param skip Integer
  * @return {Promise<{data: *, totalCount: *}|{error: boolean, message: string, statusCode: number}>}
  */
-module.exports.listImages = async (count, skip) => {
+export const listImages = async (count, skip) => {
   try {
     const skipValue = skip ? parseInt(skip) : 10;
     const countValue = count ? parseInt(count) : 0
@@ -128,18 +128,19 @@ module.exports.listImages = async (count, skip) => {
  * @param filePath String
  * @return {Promise}
  */
-const imageRequest = ( url, encoding, filePath) => {
-  return new Promise((resolve, reject) => {
-    axios.get(url, { responseType: encoding }).then(response => {
+const imageRequest = async (url, encoding, filePath) => {
+  try {
+    const response = await axios.get(url, { responseType: encoding });
+    await new Promise((resolve, reject) => {
       response.data
         .pipe(fs.createWriteStream(filePath))
         .on('finish', () => resolve())
         .on('error', error => reject(error));
-    }).catch(error => {
-      console.log(error)
-      reject('Image request failed.');
     });
-  });
+  } catch (error) {
+    console.log(error);
+    throw new Error('Image request failed.');
+  }
 };
 
 /**
@@ -147,22 +148,20 @@ const imageRequest = ( url, encoding, filePath) => {
  *
  * @param imagePath1 String
  * @param imagePath2 String
- * @return {Promise}
+ * @return Object
  */
-const imageSave = (imagePath1, imagePath2) => {
-  return new Promise((resolve, reject) => {
+const imageSave = async (imagePath1, imagePath2) => {
+  try {
     const { storageDir } = config;
     const imageName = `cat_image_${Date.now()}.jpeg`;
     const filePath = `${process.cwd()}/${storageDir}/${imageName}`;
-    mergeImg([imagePath1, imagePath2], { align: 'center'}).then(img => {
-      return img.write(filePath);
-    }).then(() => {
-        resolve({ imageName, filePath });
-    }).catch(error => {
-      console.log(error)
-      reject('Saving image failed');
-    });
-  });
+    const newImage = await mergeImg([imagePath1, imagePath2], { align: 'center'});
+    await newImage.write(filePath);
+    return { imageName, filePath };
+  } catch (error) {
+    console.log(error);
+    throw new error('Saving image failed');
+  }
 };
 
 /**
@@ -180,6 +179,7 @@ const saveImageDataToDB = async data => {
       ...data,
     });
   } catch (error) {
+    console.log(error);
     throw new Error(error.message);
   }
 };

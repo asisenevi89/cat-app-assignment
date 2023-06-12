@@ -1,6 +1,6 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
+import dotenv from 'dotenv';
+import express from "express";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
@@ -10,9 +10,11 @@ app.use(cors({
 
 
 //load routes
-require('./app/routes')(app);
+import routes from './app/routes/index.js';
+routes(app);
 
 //launch app
+dotenv.config();
 const port = process.env.PORT;
 app.listen(port, () => {
   console.log('live on port ' + port);

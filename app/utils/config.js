@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 const mongo = {
   mongoHost: process.env.MONGO_HOST,
   mongoDB: process.env.MONGO_DB,
@@ -16,7 +19,7 @@ const defaultImageProps = {
 };
 const storageDir = 'storage';
 
-module.exports = {
+export default {
   mongo,
   catURL,
   imageResponseType,

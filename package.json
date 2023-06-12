@@ -1,8 +1,9 @@
 {
-  "name": "sample-node-app",
+  "name": "cat-node-app",
   "version": "1.0.0",
   "description": "This a sample Node.js application.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",

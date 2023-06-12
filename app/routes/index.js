@@ -1,8 +1,8 @@
-const imageModule = require('../modules/image');
-const { getFormattedResponse } = require('../utils/helpers');
-const config = require('../utils/config');
+import { saveNewImage, getImage, listImages }  from '../modules/image.js';
+import { getFormattedResponse } from '../utils/helpers.js';
+import config from '../utils/config.js';
 
-module.exports = app => {
+const routes = app => {
   app.get('/', (req, res) => {
     res.json(getFormattedResponse(true, "Home Route"));
   });
@@ -32,7 +32,7 @@ module.exports = app => {
    *
    */
   app.post('/save-new-image', async (req, res) => {
-    const result = await imageModule.saveNewImage(req.body);
+    const result = await saveNewImage(req.body);
 
     if (result.error) {
       res.status(result.statusCode).json(getFormattedResponse(false, result.message));
@@ -49,7 +49,7 @@ module.exports = app => {
    */
   app.get('/get-image/:id', async(req, res) => {
     const { storageDir } = config;
-    const result = await imageModule.getImage(req.params.id);
+    const result = await getImage(req.params.id);
     if (result.error) {
       res.status(result.statusCode).json(getFormattedResponse(false, result.message));
       return;
@@ -82,7 +82,7 @@ module.exports = app => {
    */
   app.get('/list-images', async(req, res) => {
     const { count, skip } = req.query
-    const result = await imageModule.listImages(count, skip);
+    const result = await listImages(count, skip);
 
     if (result.error) {
       res.status(result.statusCode).json(getFormattedResponse(false, result.message));
@@ -91,3 +91,4 @@ module.exports = app => {
     res.json(getFormattedResponse(true, "Image List", result));
   });
 };
+export default routes;

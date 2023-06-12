@@ -1,6 +1,6 @@
-const {MongoClient} = require("mongodb");
+import { MongoClient } from "mongodb";
 
-module.exports.getMongoConnection = (mongoConfig) => {
+export const getMongoConnection = (mongoConfig) => {
   const client = new MongoClient(mongoConfig.mongoHost);
 
   return client.connect().then(host => {
@@ -10,7 +10,7 @@ module.exports.getMongoConnection = (mongoConfig) => {
   });
 };
 
-module.exports.getFormattedResponse = (status, message, data = []) => {
+export const getFormattedResponse = (status, message, data = []) => {
   return {
     status,
     message,
@@ -18,7 +18,7 @@ module.exports.getFormattedResponse = (status, message, data = []) => {
   };
 };
 
-module.exports.getErrorResponse = (message = "Error Occurred", statusCode = 500) => {
+export const getErrorResponse = (message = "Error Occurred", statusCode = 500) => {
   return {
     error: true,
     statusCode,
