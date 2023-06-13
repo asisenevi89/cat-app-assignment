@@ -6,22 +6,14 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js",
     "start": "node index.js"
   },
   "author": "Asitha Seneviratne (asisenevi@gmail.com)",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.4.0",
-    "bcryptjs": "^2.4.3",
-    "bson": "^4.6.0",
-    "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
-    "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.0",
-    "merge-img": "^2.1.3",
-    "mongodb": "^4.2.1",
-    "nodemon": "^2.0.19"
+    "dotenv": "^16.1.4",
+    "merge-img": "^2.1.3"
   },
   "devDependencies": {}
 }

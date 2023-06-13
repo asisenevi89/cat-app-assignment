@@ -1,9 +1,8 @@
 import axios from 'axios';
-import { ObjectID } from  "bson";
 import mergeImg  from 'merge-img';
 import fs from "fs";
 import config from "../utils/config.js";
-import { getErrorResponse, getMongoConnection } from "../utils/helpers.js";
+import { getErrorResponse, getFormattedResponse } from "../utils/helpers.js";
 
 /**
  * Create and Save new image
@@ -49,76 +48,12 @@ export const saveNewImage = async reqBody => {
     // Create new image with saved data and save it
     const imageData = await imageSave(filePath1, filePath2);
 
-    // store saved image data in the mongo db for future reference.
-    return saveImageDataToDB(imageData);
-
+    return  getFormattedResponse(true, "New Image Created", imageData);
   } catch (error) {
     console.log(error);
     return getErrorResponse(error.message);
   }
 };
-/**
- * Get image data
- *
- * @param imageId String
- * @return Object
- */
-export const getImage = async imageId => {
-  try {
-    const { mongo } = config;
-    const connection = await getMongoConnection(mongo);
-    const collection = connection.collection(mongo.catCollection);
-
-    // To get specific image or random image
-    let imageData;
-    if (imageId === 'random') {
-      const randomRecord = await collection.aggregate([
-        {
-          "$sample": {
-            "size": 1
-          }
-        }
-      ]).toArray();
-      imageData = randomRecord && randomRecord[0];
-    } else {
-      imageData = await collection.findOne({ _id: ObjectID(imageId) });
-    }
-
-    if (!imageData) {
-      return getErrorResponse('Image Not Found', 404);
-    }
-    return imageData;
-  } catch (error) {
-    console.log(error);
-    return getErrorResponse(error.message);
-  }
-};
-/**
- * List images
- *
- * @param count Integer
- * @param skip Integer
- * @return Object
- */
-export const listImages = async (count, skip) => {
-  try {
-    const skipValue = skip ? parseInt(skip) : 10;
-    const countValue = count ? parseInt(count) : 0
-    const { mongo } = config;
-    const connection = await getMongoConnection(mongo);
-    const collection = connection.collection(mongo.catCollection);
-
-    const totalCount = await collection.find({}).count();
-    const data = await collection.find({}).skip(skipValue).limit(countValue).toArray();
-    return {
-      totalCount,
-      data,
-    };
-  } catch (error) {
-    console.log(error);
-    return getErrorResponse(error.message);
-  }
-}
 
 /**
  * Fetch an image from cat API and saves it temp location
@@ -161,26 +96,6 @@ const imageSave = async (imagePath1, imagePath2) => {
   } catch (error) {
     console.log(error);
     throw new error('Saving image failed');
-  }
-};
-
-/**
- * Saved created image data in the Mongo Collection
- *
- * @param data Object
- * @return Object
- */
-const saveImageDataToDB = async data => {
-  try {
-    const { mongo } = config;
-    const connection = await getMongoConnection(mongo);
-    const collection = connection.collection(mongo.catCollection);
-    return collection.insertOne({
-      ...data,
-    });
-  } catch (error) {
-    console.log(error);
-    throw new Error(error.message);
   }
 };
 

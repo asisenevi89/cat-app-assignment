@@ -1,21 +1,6 @@
-import dotenv from 'dotenv';
-import express from "express";
-import cors from "cors";
+import { saveNewImage } from './app/modules/image.js';
+import { processParams } from './app/utils/helpers.js';
 
-const app = express();
-app.use(express.json());
-app.use(cors({
-  origin: process.env.FRONT_END_URL
-}));
-
-
-//load routes
-import routes from './app/routes/index.js';
-routes(app);
-
-//launch app
-dotenv.config();
-const port = process.env.PORT;
-app.listen(port, () => {
-  console.log('live on port ' + port);
-});
+const params = processParams(process.argv.slice(2));
+const result = await saveNewImage(params);
+console.log(result);
