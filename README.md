@@ -11,7 +11,7 @@ This project is composed with backend and frontend directories which are needed 
 - You can pass arguments by running `node index.js width=500 height=400 size=200 greeting1='Hi There' greeting2='Hello There'`
 
 ```sh
-cd cat-node
+cd cat-app-assignment
 npm install
 node index.js width=500 height=400 size=200 greeting1='Hi There' greeting2='Hello There'
 ```
