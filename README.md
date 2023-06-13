@@ -4,7 +4,7 @@ This project is composed with backend and frontend directories which are needed 
 
 ## Node version `14.20.0`
 
-## Setup backend
+## Run the application
 - go to into `cat-app-assignment` directory.
 - run `npm install`
 - run `node index.js` (Will run with default data)
